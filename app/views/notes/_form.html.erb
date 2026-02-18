@@ -209,8 +209,6 @@
       <div><strong data-editor-target="statLines">0</strong> lines</div>
     </div>
 
-    <button type="button" class="mode-btn" data-editor-target="btnEasymde" data-action="click->editor#toggleEasymde" style="border:1px solid #e5e7eb; border-radius:4px; margin-right:4px;">EasyMDE</button>
-
     <div class="editor-actions">
       <%= f.submit note.persisted? ? "Save" : "Create", class: "btn-save" %>
       <%= link_to "Cancel", note.persisted? ? note_path(note) : notes_path, class: "btn-cancel", data: { turbo: false } %>

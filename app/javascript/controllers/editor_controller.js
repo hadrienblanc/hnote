@@ -4,13 +4,12 @@ import { marked } from "marked"
 export default class extends Controller {
   static targets = [
     "editor", "preview", "split",
-    "btnEditor", "btnSplit", "btnPreview", "btnEasymde",
+    "btnEditor", "btnSplit", "btnPreview",
     "statChars", "statWords", "statLines"
   ]
 
   connect() {
     marked.setOptions({ gfm: true, breaks: true })
-    this._easyMDE = null
     this.render()
     this._keydown = this._handleKeydown.bind(this)
     document.addEventListener("keydown", this._keydown)
@@ -18,14 +17,9 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this._keydown)
-    if (this._easyMDE) {
-      this._easyMDE.toTextArea()
-      this._easyMDE = null
-    }
   }
 
   render() {
-    if (this._easyMDE) return
     this.previewTarget.innerHTML = marked.parse(this.editorTarget.value)
     const v = this.editorTarget.value
     this.statCharsTarget.textContent = v.length.toLocaleString()
@@ -46,31 +40,6 @@ export default class extends Controller {
   setEditor()  { this._setMode("editor") }
   setSplit()   { this._setMode("split") }
   setPreview() { this._setMode("preview") }
-
-  toggleEasymde() {
-    if (this._easyMDE) {
-      this._easyMDE.toTextArea()
-      this._easyMDE = null
-      this.splitTarget.style.display = ""
-      this.btnEasymdeTarget.classList.remove("active")
-      this.render()
-    } else {
-      this.splitTarget.style.display = "none"
-      this.btnEasymdeTarget.classList.add("active")
-      this._easyMDE = new window.EasyMDE({
-        element: this.editorTarget,
-        autofocus: true,
-        spellChecker: false,
-        toolbar: [
-          "bold", "italic", "heading", "|",
-          "quote", "unordered-list", "ordered-list", "|",
-          "link", "table", "code", "|",
-          "preview", "side-by-side", "fullscreen"
-        ],
-        renderingConfig: { singleLineBreaks: false }
-      })
-    }
-  }
 
   _setMode(mode) {
     this.splitTarget.classList.remove("mode-editor", "mode-preview")

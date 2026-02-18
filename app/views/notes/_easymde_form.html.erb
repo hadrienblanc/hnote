@@ -1,0 +1,50 @@
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; }
+  .emde-bar { border-bottom: 1px solid #e5e7eb; padding: 10px 20px; display: flex; align-items: center; gap: 16px; background: #fff; flex-shrink: 0; }
+  .emde-bar a { color: #888; text-decoration: none; font-size: 0.85rem; }
+  .emde-bar a:hover { color: #000; }
+  .emde-save { background: #000; color: #fff; border: none; padding: 5px 14px; font-size: 0.82rem; cursor: pointer; }
+  .emde-save:hover { opacity: 0.75; }
+  .emde-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .EasyMDEContainer { flex: 1; display: flex; flex-direction: column; }
+  .EasyMDEContainer .CodeMirror { flex: 1; height: 100%; font-size: 15px; line-height: 1.7; }
+  .EasyMDEContainer .CodeMirror-scroll { height: 100%; }
+</style>
+
+<%= form_with model: note, data: { turbo: false } do |f| %>
+  <div class="emde-bar">
+    <%= link_to "← Note", note.persisted? ? note_path(note) : notes_path, data: { turbo: false } %>
+    <span style="color:#e5e7eb">|</span>
+    <span style="font-size:0.82rem; color:#aaa">EasyMDE</span>
+    <%= f.submit note.persisted? ? "Save" : "Create", class: "emde-save" %>
+    <%= link_to "Editor", note.persisted? ? edit_note_path(note) : new_note_path, style: "font-size:0.82rem; color:#888;", data: { turbo: false } %>
+  </div>
+
+  <% if note.errors.any? %>
+    <div style="padding:8px 20px; background:#fef2f2; font-size:0.82rem; color:#b91c1c;">
+      <%= note.errors.full_messages.join(", ") %>
+    </div>
+  <% end %>
+
+  <div class="emde-body">
+    <%= f.text_area :content, id: "emde-textarea", style: "display:none" %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    new EasyMDE({
+      element: document.getElementById("emde-textarea"),
+      autofocus: true,
+      spellChecker: false,
+      toolbar: [
+        "bold", "italic", "heading", "|",
+        "quote", "unordered-list", "ordered-list", "|",
+        "link", "table", "code", "|",
+        "preview", "side-by-side", "fullscreen"
+      ],
+      renderingConfig: { singleLineBreaks: false }
+    });
+  });
+</script>

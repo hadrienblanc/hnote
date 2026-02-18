@@ -1,2 +1,6 @@
-<% content_for :title, "Edit note — hnote" %>
-<%= render "form", note: @note %>
+<% content_for :title, "Edit — H." %>
+<% if params[:mode] == "easymde" %>
+  <%= render "easymde_form", note: @note %>
+<% else %>
+  <%= render "form", note: @note %>
+<% end %>
