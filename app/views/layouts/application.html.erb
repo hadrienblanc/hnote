@@ -23,11 +23,16 @@
       <a href="<%= root_path %>" class="font-bold tracking-tighter text-xl">H.</a>
       <div class="flex items-center gap-6 text-sm">
         <% if user_signed_in? %>
-          <%= link_to "+", new_note_path, class: "border border-black px-3 py-1 text-lg leading-none hover:bg-black hover:text-white transition-colors" %>
+          <%= link_to "+", new_note_path, class: "border border-black w-7 h-7 inline-flex items-center justify-center hover:bg-black hover:text-white transition-colors" %>
           <span class="text-gray-500"><%= current_user.email %></span>
-          <%= button_to "Sign out", destroy_user_session_path, method: :delete,
-              class: "text-black hover:underline bg-transparent border-0 cursor-pointer p-0",
-              data: { turbo_method: :delete } %>
+          <%= button_to destroy_user_session_path, method: :delete,
+              class: "text-black hover:opacity-50 bg-transparent border-0 cursor-pointer p-0 transition-opacity",
+              title: "Sign out",
+              data: { turbo_method: :delete } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          <% end %>
         <% else %>
           <%= link_to "Sign in", new_user_session_path %>
         <% end %>
