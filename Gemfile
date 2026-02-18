@@ -66,6 +66,6 @@ end
 
 gem "devise", "~> 5.0"
 gem "redcarpet", "~> 3.6"
-gem "minitest", "~> 5.27"
+gem "minitest", "~> 6.0"
 
 gem "pagy", "~> 9.3"
