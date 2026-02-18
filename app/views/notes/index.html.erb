@@ -66,7 +66,31 @@
         <% end %>
       </tbody>
     </table>
-    <p class="text-xs mt-2 text-gray-500"><%= @notes.size %> note<%= @notes.size == 1 ? "" : "s" %></p>
+    <div class="flex items-center justify-between mt-3">
+      <p class="text-xs text-gray-500"><%= @pagy.count %> note<%= @pagy.count == 1 ? "" : "s" %></p>
+      <% if @pagy.pages > 1 %>
+        <nav class="flex items-center gap-1 text-sm">
+          <% if @pagy.prev %>
+            <%= link_to "←", notes_path(page: @pagy.prev, sort: @sort_col, dir: @sort_dir, q: params[:q]),
+                class: "border border-black px-2 py-1 hover:bg-black hover:text-white transition-colors" %>
+          <% end %>
+          <% @pagy.series.each do |item| %>
+            <% if item == :gap %>
+              <span class="px-2 py-1">…</span>
+            <% elsif item == @pagy.page %>
+              <span class="border border-black px-2 py-1 bg-black text-white"><%= item %></span>
+            <% else %>
+              <%= link_to item, notes_path(page: item, sort: @sort_col, dir: @sort_dir, q: params[:q]),
+                  class: "border border-black px-2 py-1 hover:bg-black hover:text-white transition-colors" %>
+            <% end %>
+          <% end %>
+          <% if @pagy.next %>
+            <%= link_to "→", notes_path(page: @pagy.next, sort: @sort_col, dir: @sort_dir, q: params[:q]),
+                class: "border border-black px-2 py-1 hover:bg-black hover:text-white transition-colors" %>
+          <% end %>
+        </nav>
+      <% end %>
+    </div>
   <% end %>
 
 </div>

@@ -12,6 +12,7 @@ class NotesController < ApplicationController
     @notes = @notes.order("#{sort_col} #{sort_dir}")
     @sort_col = sort_col
     @sort_dir = sort_dir
+    @pagy, @notes = pagy(@notes, limit: 20)
   end
 
   def show
