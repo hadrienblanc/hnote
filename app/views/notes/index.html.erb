@@ -2,14 +2,14 @@
 
 <div class="max-w-6xl mx-auto">
 
-  <%# Search + new note %>
+  <%# Search %>
   <div class="flex items-center gap-4 mb-6">
     <%= form_with url: notes_path, method: :get, local: true, class: "flex-1 flex items-center gap-0" do |f| %>
       <%= f.hidden_field :sort, value: @sort_col %>
       <%= f.hidden_field :dir, value: @sort_dir %>
       <%= f.text_field :q, value: params[:q],
           placeholder: "Search notes...",
-          class: "flex-1 border border-black px-3 py-2 text-sm font-mono focus:outline-none",
+          class: "flex-1 border border-black px-3 py-2 text-sm focus:outline-none",
           autocomplete: "off" %>
       <%= f.submit "Search", class: "border border-l-0 border-black px-4 py-2 text-sm hover:bg-black hover:text-white transition-colors cursor-pointer" %>
     <% end %>
@@ -31,9 +31,7 @@
     <table class="w-full border border-black text-sm">
       <thead>
         <tr class="border-b border-black">
-          <th class="text-left px-4 py-3 font-bold tracking-tighter w-full">
-            Title
-          </th>
+          <th class="text-left px-4 py-3 font-bold tracking-tighter w-full">Title</th>
           <th class="text-left px-4 py-3 font-bold tracking-tighter whitespace-nowrap">
             <%= sort_link "Updated", "updated_at", @sort_col, @sort_dir, params[:q] %>
           </th>
@@ -45,24 +43,22 @@
       </thead>
       <tbody class="divide-y divide-black">
         <% @notes.each do |note| %>
-          <tr class="hover:bg-black hover:text-white transition-colors group">
+          <tr>
             <td class="px-4 py-3">
-              <%= link_to note_path(note), class: "block font-mono group-hover:text-white" do %>
-                <%= note.content.lines.first&.strip&.truncate(80) || "(empty)" %>
-              <% end %>
+              <%= link_to note.content.lines.first&.strip&.truncate(80) || "(empty)",
+                  note_path(note), class: "hover:underline" %>
             </td>
-            <td class="px-4 py-3 font-mono whitespace-nowrap" title="<%= note.updated_at.strftime('%b %d, %Y %H:%M') %>">
+            <td class="px-4 py-3 whitespace-nowrap text-gray-500" title="<%= note.updated_at.strftime('%b %d, %Y %H:%M') %>">
               <%= time_ago_in_words(note.updated_at) %> ago
             </td>
-            <td class="px-4 py-3 font-mono whitespace-nowrap" title="<%= note.created_at.strftime('%b %d, %Y %H:%M') %>">
+            <td class="px-4 py-3 whitespace-nowrap text-gray-500" title="<%= note.created_at.strftime('%b %d, %Y %H:%M') %>">
               <%= time_ago_in_words(note.created_at) %> ago
             </td>
             <td class="px-4 py-3 whitespace-nowrap">
               <div class="flex items-center gap-3">
-                <%= link_to "Edit", edit_note_path(note),
-                    class: "hover:underline group-hover:text-white" %>
+                <%= link_to "Edit", edit_note_path(note), class: "hover:underline" %>
                 <%= button_to "Del", note_path(note), method: :delete,
-                    class: "hover:underline group-hover:text-white bg-transparent border-0 cursor-pointer p-0",
+                    class: "hover:underline bg-transparent border-0 cursor-pointer p-0",
                     data: { turbo_method: :delete, turbo_confirm: "Delete?" } %>
               </div>
             </td>
