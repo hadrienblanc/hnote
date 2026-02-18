@@ -1,0 +1,11 @@
+alice_note:
+  user: alice
+  content: "# Alice's Note\n\nThis is **bold** text."
+
+alice_note2:
+  user: alice
+  content: "Second note from Alice."
+
+bob_note:
+  user: bob
+  content: "Bob's private note."

@@ -1,0 +1,22 @@
+<%= form_with model: note, class: "space-y-4" do |f| %>
+  <% if note.errors.any? %>
+    <div class="border border-black p-4 text-sm">
+      <% note.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.text_area :content,
+        rows: 20,
+        class: "w-full border border-black p-4 font-mono text-sm resize-y focus:outline-none",
+        placeholder: "Write your note in Markdown..." %>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <%= f.submit note.persisted? ? "Update note" : "Create note",
+        class: "border border-black px-4 py-2 text-sm hover:bg-black hover:text-white transition-colors cursor-pointer" %>
+    <%= link_to "Cancel", note.persisted? ? note_path(note) : notes_path, class: "text-sm hover:underline" %>
+  </div>
+<% end %>

@@ -1,0 +1,19 @@
+<% content_for :title, @note.content.lines.first&.strip&.truncate(60) %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <%= link_to "← Notes", notes_path, class: "text-sm hover:underline" %>
+    <div class="flex gap-4 text-sm">
+      <%= link_to "Edit", edit_note_path(@note), class: "border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors" %>
+      <%= button_to "Delete", note_path(@note), method: :delete,
+          class: "border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors bg-white",
+          data: { turbo_method: :delete, turbo_confirm: "Delete this note?" } %>
+    </div>
+  </div>
+
+  <div class="border border-black p-8 prose prose-sm max-w-none">
+    <%= markdown(@note.content) %>
+  </div>
+
+  <p class="text-gray-500 text-xs mt-4"><%= @note.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+</div>

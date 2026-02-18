@@ -1,0 +1,18 @@
+<% content_for :title, "hnote" %>
+
+<div class="max-w-2xl mx-auto">
+  <% if @notes.empty? %>
+    <p class="text-sm">No notes yet. <%= link_to "Create one", new_note_path, class: "underline" %>.</p>
+  <% else %>
+    <ul class="divide-y divide-black">
+      <% @notes.each do |note| %>
+        <li class="py-4">
+          <%= link_to note_path(note), class: "block hover:underline" do %>
+            <span class="font-bold tracking-tighter"><%= note.content.lines.first&.strip&.truncate(80) || "(empty)" %></span>
+            <span class="text-gray-500 text-sm ml-4"><%= note.created_at.strftime("%b %d, %Y") %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
