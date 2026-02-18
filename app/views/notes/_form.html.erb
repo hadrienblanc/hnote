@@ -195,7 +195,7 @@
 
 <%= form_with model: note, id: "note-form", data: { controller: "editor" } do |f| %>
   <div class="editor-toolbar">
-    <%= link_to note.persisted? ? note_path(note) : notes_path, class: "back" do %>← <%= note.persisted? ? "Note" : "Notes" %><% end %>
+    <%= link_to note.persisted? ? note_path(note) : notes_path, class: "back", data: { turbo: false } do %>← <%= note.persisted? ? "Note" : "Notes" %><% end %>
 
     <div class="mode-group">
       <button type="button" class="mode-btn" data-editor-target="btnEditor" data-action="click->editor#setEditor">Editor <span class="kbd">⌘1</span></button>
@@ -211,7 +211,7 @@
 
     <div class="editor-actions">
       <%= f.submit note.persisted? ? "Save" : "Create", class: "btn-save" %>
-      <%= link_to "Cancel", note.persisted? ? note_path(note) : notes_path, class: "btn-cancel" %>
+      <%= link_to "Cancel", note.persisted? ? note_path(note) : notes_path, class: "btn-cancel", data: { turbo: false } %>
     </div>
   </div>
 
