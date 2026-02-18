@@ -2,8 +2,16 @@ class NotesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_note, only: [:show, :edit, :update, :destroy]
 
+  SORT_COLUMNS = %w[created_at updated_at].freeze
+
   def index
-    @notes = current_user.notes.order(created_at: :desc)
+    @notes = current_user.notes
+    @notes = @notes.where("content LIKE ?", "%#{params[:q]}%") if params[:q].present?
+    sort_col = SORT_COLUMNS.include?(params[:sort]) ? params[:sort] : "updated_at"
+    sort_dir = params[:dir] == "asc" ? "asc" : "desc"
+    @notes = @notes.order("#{sort_col} #{sort_dir}")
+    @sort_col = sort_col
+    @sort_dir = sort_dir
   end
 
   def show
