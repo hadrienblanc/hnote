@@ -1,22 +1,241 @@
-<%= form_with model: note, class: "space-y-4" do |f| %>
+<% content_for :head do %>
+  <style>
+    main { padding: 0 !important; display: flex; flex-direction: column; overflow: hidden; }
+
+    #note-form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .editor-toolbar {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .editor-toolbar .back { color: #888; text-decoration: none; font-size: 0.85rem; }
+    .editor-toolbar .back:hover { color: #000; }
+
+    .mode-group {
+      display: flex;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      border-right: 1px solid #e5e7eb;
+      color: #888;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .mode-btn:last-child { border-right: none; }
+    .mode-btn:hover { color: #000; background: #f9fafb; }
+    .mode-btn.active { background: #000; color: #fff; }
+    .mode-btn .kbd { opacity: 0.5; font-size: 0.68rem; margin-left: 4px; }
+
+    .editor-stats {
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: #aaa;
+      display: flex;
+      gap: 14px;
+    }
+
+    .editor-stats strong { color: #555; }
+
+    .editor-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .btn-save {
+      background: #000;
+      color: #fff;
+      border: 1px solid #000;
+      padding: 5px 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-save:hover { opacity: 0.75; }
+
+    .btn-cancel { font-size: 0.82rem; color: #888; text-decoration: none; }
+    .btn-cancel:hover { color: #000; text-decoration: underline; }
+
+    .editor-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      overflow: hidden;
+      transition: grid-template-columns 0.2s ease;
+    }
+
+    .editor-split.mode-editor  { grid-template-columns: 1fr 0; }
+    .editor-split.mode-preview { grid-template-columns: 0 1fr; }
+
+    .editor-pane {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #e5e7eb;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .editor-pane-header, .preview-pane-header {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .editor-pane-header .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    #md-editor {
+      flex: 1;
+      background: #fff;
+      color: #000;
+      border: none;
+      outline: none;
+      resize: none;
+      padding: 24px 28px;
+      font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      tab-size: 2;
+    }
+
+    #md-editor::-webkit-scrollbar { width: 6px; }
+    #md-editor::-webkit-scrollbar-track { background: #f9fafb; }
+    #md-editor::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+
+    .preview-pane {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+      background: #fff;
+    }
+
+    #md-preview {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px;
+      line-height: 1.75;
+      color: #000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    #md-preview::-webkit-scrollbar { width: 6px; }
+    #md-preview::-webkit-scrollbar-track { background: #f9fafb; }
+    #md-preview::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+
+    #md-preview h1, #md-preview h2, #md-preview h3,
+    #md-preview h4, #md-preview h5, #md-preview h6 { margin: 1.5em 0 0.4em; line-height: 1.3; }
+    #md-preview h1:first-child, #md-preview h2:first-child { margin-top: 0; }
+    #md-preview h1 { font-size: 1.8em; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3em; }
+    #md-preview h2 { font-size: 1.4em; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3em; }
+    #md-preview h3 { font-size: 1.15em; }
+    #md-preview p { margin: 0.8em 0; }
+    #md-preview a { color: #4f46e5; text-decoration: none; }
+    #md-preview a:hover { text-decoration: underline; }
+    #md-preview strong { font-weight: 600; }
+    #md-preview code {
+      background: #f3f4f6; padding: 2px 6px; border-radius: 3px;
+      font-size: 0.88em; font-family: 'Cascadia Code', monospace; border: 1px solid #e5e7eb;
+    }
+    #md-preview pre {
+      background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px;
+      padding: 16px 20px; overflow-x: auto; margin: 1em 0;
+    }
+    #md-preview pre code { background: transparent; padding: 0; border: none; font-size: 0.9em; }
+    #md-preview blockquote {
+      border-left: 3px solid #000; margin: 1em 0; padding: 8px 16px;
+      color: #555; background: #f9fafb; border-radius: 0 4px 4px 0;
+    }
+    #md-preview blockquote p { margin: 0; }
+    #md-preview ul, #md-preview ol { margin: 0.8em 0; padding-left: 1.8em; }
+    #md-preview li { margin: 0.35em 0; }
+    #md-preview li input[type="checkbox"] { margin-right: 6px; }
+    #md-preview table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.9em; }
+    #md-preview th, #md-preview td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+    #md-preview th { background: #f9fafb; font-weight: 600; }
+    #md-preview hr { border: none; border-top: 1px solid #e5e7eb; margin: 2em 0; }
+    #md-preview del { color: #aaa; }
+    #md-preview img { max-width: 100%; border-radius: 4px; }
+  </style>
+<% end %>
+
+<%= form_with model: note, id: "note-form", data: { controller: "editor" } do |f| %>
+  <div class="editor-toolbar">
+    <%= link_to note.persisted? ? note_path(note) : notes_path, class: "back" do %>← <%= note.persisted? ? "Note" : "Notes" %><% end %>
+
+    <div class="mode-group">
+      <button type="button" class="mode-btn" data-editor-target="btnEditor" data-action="click->editor#setEditor">Editor <span class="kbd">⌘1</span></button>
+      <button type="button" class="mode-btn active" data-editor-target="btnSplit" data-action="click->editor#setSplit">Split <span class="kbd">⌘2</span></button>
+      <button type="button" class="mode-btn" data-editor-target="btnPreview" data-action="click->editor#setPreview">Preview <span class="kbd">⌘3</span></button>
+    </div>
+
+    <div class="editor-stats">
+      <div><strong data-editor-target="statChars">0</strong> chars</div>
+      <div><strong data-editor-target="statWords">0</strong> words</div>
+      <div><strong data-editor-target="statLines">0</strong> lines</div>
+    </div>
+
+    <div class="editor-actions">
+      <%= f.submit note.persisted? ? "Save" : "Create", class: "btn-save" %>
+      <%= link_to "Cancel", note.persisted? ? note_path(note) : notes_path, class: "btn-cancel" %>
+    </div>
+  </div>
+
   <% if note.errors.any? %>
-    <div class="border border-black p-4 text-sm">
-      <% note.errors.full_messages.each do |msg| %>
-        <p><%= msg %></p>
-      <% end %>
+    <div style="padding: 10px 20px; background: #fef2f2; border-bottom: 1px solid #fecaca; font-size: 0.82rem; color: #b91c1c;">
+      <% note.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
     </div>
   <% end %>
 
-  <div>
-    <%= f.text_area :content,
-        rows: 20,
-        class: "w-full border border-black p-4 font-mono text-sm resize-y focus:outline-none",
-        placeholder: "Write your note in Markdown..." %>
-  </div>
-
-  <div class="flex items-center gap-4">
-    <%= f.submit note.persisted? ? "Update note" : "Create note",
-        class: "border border-black px-4 py-2 text-sm hover:bg-black hover:text-white transition-colors cursor-pointer" %>
-    <%= link_to "Cancel", note.persisted? ? note_path(note) : notes_path, class: "text-sm hover:underline" %>
+  <div class="editor-split" id="editor-split" data-editor-target="split">
+    <div class="editor-pane">
+      <div class="editor-pane-header">
+        <div class="dot"></div>
+        Markdown
+      </div>
+      <%= f.text_area :content, id: "md-editor", spellcheck: false,
+          placeholder: "Write your note in Markdown…",
+          data: { editor_target: "editor", action: "input->editor#render keydown->editor#tab" } %>
+    </div>
+    <div class="preview-pane">
+      <div class="preview-pane-header">Preview (GFM)</div>
+      <div id="md-preview" data-editor-target="preview"></div>
+    </div>
   </div>
 <% end %>
