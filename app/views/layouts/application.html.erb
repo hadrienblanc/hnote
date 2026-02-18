@@ -23,7 +23,7 @@
       <a href="<%= root_path %>" class="font-bold tracking-tighter text-xl">H.</a>
       <div class="flex items-center gap-6 text-sm">
         <% if user_signed_in? %>
-          <%= link_to "New note", new_note_path, class: "border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors" %>
+          <%= link_to "+", new_note_path, class: "border border-black px-3 py-1 text-lg leading-none hover:bg-black hover:text-white transition-colors" %>
           <span class="text-gray-500"><%= current_user.email %></span>
           <%= button_to "Sign out", destroy_user_session_path, method: :delete,
               class: "text-black hover:underline bg-transparent border-0 cursor-pointer p-0",
