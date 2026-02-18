@@ -53,7 +53,7 @@
   <div class="flex items-center justify-between mb-8 text-sm">
     <%= link_to "← Notes", notes_path, class: "hover:underline" %>
     <div class="flex items-center gap-4">
-      <button data-controller="clipboard" data-clipboard-content-value="<%= j @note.content %>"
+      <button data-controller="clipboard" data-clipboard-content-value="<%= h @note.content %>"
               data-action="click->clipboard#copy"
               class="hover:opacity-50 transition-opacity cursor-pointer bg-transparent border-0 p-0" title="Copy">
         <span data-clipboard-target="icon">
