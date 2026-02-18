@@ -29,6 +29,7 @@ class NotesController < ApplicationController
 
   def new
     @note = Note.new
+    render layout: "editor"
   end
 
   def create
@@ -36,18 +37,19 @@ class NotesController < ApplicationController
     if @note.save
       redirect_to @note, notice: "Note created."
     else
-      render :new, status: :unprocessable_entity
+      render :new, layout: "editor", status: :unprocessable_entity
     end
   end
 
   def edit
+    render layout: "editor"
   end
 
   def update
     if @note.update(note_params)
       redirect_to @note, notice: "Note updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, layout: "editor", status: :unprocessable_entity
     end
   end
 
