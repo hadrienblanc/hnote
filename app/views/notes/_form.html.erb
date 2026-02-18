@@ -193,7 +193,7 @@
   </style>
 <% end %>
 
-<%= form_with model: note, id: "note-form", data: { controller: "editor" } do |f| %>
+<%= form_with model: note, id: "note-form", data: { controller: "editor", turbo: false } do |f| %>
   <div class="editor-toolbar">
     <%= link_to note.persisted? ? note_path(note) : notes_path, class: "back", data: { turbo: false } do %>← <%= note.persisted? ? "Note" : "Notes" %><% end %>
 
