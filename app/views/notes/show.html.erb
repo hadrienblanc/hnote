@@ -1,19 +1,69 @@
 <% content_for :title, @note.content.lines.first&.strip&.truncate(60) %>
 
+<% content_for :head do %>
+<style>
+  .note-body { line-height: 1.75; color: #111; }
+  .note-body h1, .note-body h2, .note-body h3,
+  .note-body h4, .note-body h5, .note-body h6 {
+    font-weight: 700; line-height: 1.3; margin: 1.6em 0 0.4em;
+  }
+  .note-body h1:first-child, .note-body h2:first-child { margin-top: 0; }
+  .note-body h1 { font-size: 1.75em; }
+  .note-body h2 { font-size: 1.35em; }
+  .note-body h3 { font-size: 1.1em; }
+  .note-body p  { margin: 0.9em 0; }
+  .note-body a  { text-decoration: underline; }
+  .note-body a:hover { opacity: 0.6; }
+  .note-body strong { font-weight: 700; }
+  .note-body em { font-style: italic; }
+  .note-body del { opacity: 0.4; }
+  .note-body ul, .note-body ol { margin: 0.8em 0; padding-left: 1.6em; }
+  .note-body li { margin: 0.3em 0; }
+  .note-body code {
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.875em;
+    background: #f3f4f6;
+    padding: 2px 5px;
+  }
+  .note-body pre {
+    background: #f3f4f6;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: 1em 0;
+    font-size: 0.875em;
+    line-height: 1.6;
+  }
+  .note-body pre code { background: none; padding: 0; }
+  .note-body blockquote {
+    border-left: 2px solid #000;
+    padding-left: 1rem;
+    margin: 1em 0;
+    color: #555;
+  }
+  .note-body table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.9em; }
+  .note-body th, .note-body td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  .note-body th { font-weight: 700; background: #f9fafb; }
+  .note-body hr { border: none; border-top: 1px solid #e5e7eb; margin: 2em 0; }
+  .note-body img { max-width: 100%; }
+</style>
+<% end %>
+
 <div class="max-w-2xl mx-auto">
-  <div class="flex items-center justify-between mb-6">
-    <%= link_to "← Notes", notes_path, class: "text-sm hover:underline" %>
-    <div class="flex gap-4 text-sm">
-      <%= link_to "Edit", edit_note_path(@note), class: "border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors" %>
+
+  <div class="flex items-center justify-between mb-8 text-sm">
+    <%= link_to "← Notes", notes_path, class: "hover:underline" %>
+    <div class="flex gap-4">
+      <%= link_to "Edit", edit_note_path(@note), class: "hover:underline" %>
       <%= button_to "Delete", note_path(@note), method: :delete,
-          class: "border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors bg-white",
+          class: "hover:underline bg-transparent border-0 cursor-pointer p-0",
           data: { turbo_method: :delete, turbo_confirm: "Delete this note?" } %>
     </div>
   </div>
 
-  <div class="border border-black p-8 prose prose-sm max-w-none">
+  <div class="note-body">
     <%= markdown(@note.content) %>
   </div>
 
-  <p class="text-gray-500 text-xs mt-4"><%= @note.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+  <p class="text-xs text-gray-400 mt-10"><%= @note.updated_at.strftime("%B %d, %Y") %></p>
+
 </div>
