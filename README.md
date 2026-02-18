@@ -1,24 +1,30 @@
-# README
+# H.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A minimal Markdown notes app. Black and white. No friction.
 
-Things you may want to cover:
+## Stack
 
-* Ruby version
+- **Rails 8** — SQLite, Propshaft, Importmap, Turbo
+- **Devise** — authentication
+- **Redcarpet** — Markdown rendering
+- **Tailwind CSS** — styling
 
-* System dependencies
+## Features
 
-* Configuration
+- Write notes in Markdown, rendered on show
+- List with sort (updated / created) and full-text search
+- Per-user isolation — notes scoped to `current_user`
 
-* Database creation
+## Run locally
 
-* Database initialization
+```bash
+bundle install
+rails db:migrate
+bin/dev
+```
 
-* How to run the test suite
+## Test
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+rails test
+```
