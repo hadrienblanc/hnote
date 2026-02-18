@@ -6,7 +6,16 @@ class NotesController < ApplicationController
 
   def index
     @notes = current_user.notes
-    @notes = @notes.where("content LIKE ?", "%#{params[:q]}%") if params[:q].present?
+    if params[:q].present?
+      q = ActiveSupport::Inflector.transliterate(params[:q]).downcase.strip
+      phrase = @notes.where("content_normalized LIKE ?", "%#{q}%")
+      @notes = if phrase.exists?
+        phrase
+      else
+        words = q.split
+        words.reduce(@notes) { |scope, w| scope.where("content_normalized LIKE ?", "%#{w}%") }
+      end
+    end
     sort_col = SORT_COLUMNS.include?(params[:sort]) ? params[:sort] : "updated_at"
     sort_dir = params[:dir] == "asc" ? "asc" : "desc"
     @notes = @notes.order("#{sort_col} #{sort_dir}")

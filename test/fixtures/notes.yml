@@ -1,11 +1,14 @@
 alice_note:
   user: alice
   content: "# Alice's Note\n\nThis is **bold** text."
+  content_normalized: "# alice's note\n\nthis is **bold** text."
 
 alice_note2:
   user: alice
   content: "Second note from Alice."
+  content_normalized: "second note from alice."
 
 bob_note:
   user: bob
   content: "Bob's private note."
+  content_normalized: "bob's private note."
