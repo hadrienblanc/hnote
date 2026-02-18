@@ -8,6 +8,8 @@
     <%= yield :head %>
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="/easymde.min.css">
+    <script src="/easymde.min.js"></script>
     <%= javascript_importmap_tags %>
     <style>
       html, body { height: 100%; margin: 0; }
